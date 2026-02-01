@@ -1,8 +1,12 @@
 {
   "name": "plan-review-loop",
   "version": "1.0.0",
-  "description": "Iterative plan review loop. Sends your plan to GPT for review, revises based on findings, and repeats until only minor issues remain.",
+  "description": "Iterative plan review loop. Sends your plan to GPT via Codex for review, revises based on findings, and repeats until only minor issues remain.",
   "author": {
-    "name": "user"
-  }
+    "name": "Sheeki"
+  },
+  "repository": "https://github.com/sheeki03/plan-review-loop",
+  "license": "MIT",
+  "keywords": ["plan", "review", "codex", "gpt", "loop"],
+  "commands": "./commands"
 }
