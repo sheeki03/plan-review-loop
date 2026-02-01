@@ -1,6 +1,6 @@
 {
   "name": "plan-review-loop",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Iterative plan review loop. Sends your plan to GPT via Codex for review, revises based on findings, and repeats until only minor issues remain.",
   "author": {
     "name": "Sheeki"
