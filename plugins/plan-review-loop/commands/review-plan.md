@@ -191,6 +191,14 @@ There is no max iteration cap. Keep looping until the plan is clean. If after 8 
 
 ### 2d. If Continuing: Revise the Plan (silently)
 
+**Which issues to fix — fix ALL of these, not just critical/high:**
+- ALL CRITICAL issues — must fix
+- ALL HIGH issues — must fix
+- ALL MEDIUM issues — must fix (these are real problems, not nitpicks)
+- LOW issues — fix if the fix is straightforward (1-2 line plan edit). Skip only if it would require significant plan restructuring.
+
+**Do NOT cherry-pick only critical/high and leave medium issues for the next iteration.** Fixing only the top severity issues causes unnecessary extra iterations. GPT already filtered out nitpicks — if it rated something MEDIUM, it matters.
+
 1. Apply fixes to the plan file using the Edit tool. Output NOTHING during this phase.
 2. After all edits are done, output ONLY this transition template and NOTHING ELSE:
 
