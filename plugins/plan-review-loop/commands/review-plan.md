@@ -123,6 +123,10 @@ MUST DO:
 - Set VERDICT to REVISE if more than 4 MEDIUM/LOW issues remain
 - Set VERDICT to ACCEPTABLE only if zero CRITICAL/HIGH issues AND 4 or fewer MEDIUM/LOW issues remain
 - ALWAYS include an OPEN QUESTIONS section, even if verdict is ACCEPTABLE — surface anything ambiguous with your best recommendation
+- CROSS-REFERENCE CHECK: For every function, type, or module mentioned in more than one section, verify the contract (params, return type, error behavior) is IDENTICAL everywhere. If section A says "returns X on failure" but section B says "returns Y on failure", flag it as HIGH.
+- SCHEMA/MIGRATION CHECK: If any change modifies cache keys, storage formats, or persistent state, verify the plan addresses migration — will old data be silently stale? Is there a version guard?
+- IMPORT SAFETY CHECK: If new dependencies are added, verify they won't crash at import time if unavailable. Should they be dynamically imported?
+- BLAST RADIUS CHECK: If a component can produce variable-length output (e.g., expansion results), verify there are per-item caps to prevent flooding downstream systems.
 
 MUST NOT DO:
 - Leave open questions without a recommendation
