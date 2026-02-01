@@ -94,52 +94,44 @@ For each iteration (no hard cap — keep going until the plan is clean):
 
 ### 2a. Send to GPT (silently)
 
-Call `mcp__codex__codex` with the delegation prompt below. Output NOTHING before or after the call. No narration.
+Call `mcp__codex__codex` with the appropriate delegation prompt. Output NOTHING before or after the call. No narration.
 
-Delegation prompt:
+**Use the FIRST-CALL prompt for iteration 1. Use the FOLLOW-UP prompt for iteration 2+.**
+
+#### First-call prompt (iteration 1 only):
+
 ```
-TASK: Review this implementation plan for bugs, improvements, open questions, and anything else that could go wrong. For any open questions, give your best recommendation — don't leave anything as "needs discussion".
-
-EXPECTED OUTCOME: A structured review with severity-rated issues and actionable recommendations.
+TASK: Review this implementation plan. Find bugs, gaps, ambiguities, and anything that could go wrong.
 
 CONTEXT:
-- Plan to review:
-
 <plan>
 {FULL PLAN CONTENT HERE}
 </plan>
 
 CONSTRAINTS:
-- This is iteration {N} of the review loop
-- Previous iterations found and fixed: {summary of previous fixes, or "N/A - first iteration"}
-
-MUST DO:
-- Rate every issue as CRITICAL, HIGH, MEDIUM, or LOW
-- Provide a specific, actionable recommendation for every issue
-- Provide your best recommendation for every open question
-- Be specific and practical, not theoretical
-- Include a SUMMARY with counts by severity
-- Set VERDICT to REVISE if any CRITICAL or HIGH issues exist
-- Set VERDICT to REVISE if more than 4 MEDIUM/LOW issues remain
-- Set VERDICT to ACCEPTABLE only if zero CRITICAL/HIGH issues AND 4 or fewer MEDIUM/LOW issues remain
-- ALWAYS include an OPEN QUESTIONS section, even if verdict is ACCEPTABLE — surface anything ambiguous with your best recommendation
-- CROSS-REFERENCE CHECK: For every function, type, or module mentioned in more than one section, verify the contract (params, return type, error behavior) is IDENTICAL everywhere. If section A says "returns X on failure" but section B says "returns Y on failure", flag it as HIGH.
-- SCHEMA/MIGRATION CHECK: If any change modifies cache keys, storage formats, or persistent state, verify the plan addresses migration — will old data be silently stale? Is there a version guard?
-- IMPORT SAFETY CHECK: If new dependencies are added, verify they won't crash at import time if unavailable. Should they be dynamically imported?
-- BLAST RADIUS CHECK: If a component can produce variable-length output (e.g., expansion results), verify there are per-item caps to prevent flooding downstream systems.
-
-MUST NOT DO:
-- Leave open questions without a recommendation
-- Flag style or formatting nitpicks
-- Be vague ("improve error handling" — say exactly what and how)
-- Repeat issues that were already fixed in previous iterations
-
-OUTPUT FORMAT:
-Follow the strict output format defined in your system instructions (VERDICT, ISSUES, OPEN QUESTIONS, SUMMARY).
+- VERDICT is ACCEPTABLE only if zero CRITICAL/HIGH AND ≤4 MEDIUM/LOW issues remain. Otherwise REVISE.
+- ALWAYS include OPEN QUESTIONS even if verdict is ACCEPTABLE.
 ```
 
-Parameters:
-- `developer-instructions`: Contents of the plan-reviewer prompt file
+#### Follow-up prompt (iteration 2+):
+
+```
+TASK: Re-review this revised plan. Focus on whether previous issues were fixed and any new issues introduced.
+
+<plan>
+{FULL PLAN CONTENT HERE}
+</plan>
+
+PREVIOUS ISSUES FIXED: {brief list, e.g. "added error handling for HTTP 429, fixed cache key migration"}
+REMAINING KNOWN ISSUES: {any issues not yet addressed, or "None"}
+
+CONSTRAINTS:
+- Do not re-raise issues that were fixed.
+- VERDICT is ACCEPTABLE only if zero CRITICAL/HIGH AND ≤4 MEDIUM/LOW issues remain. Otherwise REVISE.
+```
+
+#### Parameters (both prompts):
+- `developer-instructions`: Contents of the plan-reviewer prompt file (covers review criteria, output format, style, severity rules — do NOT duplicate these in the prompt)
 - `sandbox`: `read-only`
 
 ### 2b. Parse and Present Results
